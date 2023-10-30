@@ -99,6 +99,12 @@ class HotelImage(models.Model):
         _('Date uploaded'),
         auto_now=True
     )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_('Author'),
+        on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
 
     class Meta:
         verbose_name = _('Image')
