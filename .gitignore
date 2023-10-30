@@ -1,2 +1,4 @@
 .idea
 h_env
+migrations
+db.sqlite3
