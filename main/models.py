@@ -119,12 +119,26 @@ class Room(models.Model):
     )
     images = models.ManyToManyField(
         HotelImage,
-        verbose_name=_('Room images')
+        verbose_name=_('Room images'),
+        null=True, blank=True
     )
     hotel = models.ForeignKey(
         Hotel,
         verbose_name=_('Hotel'),
         on_delete=models.CASCADE
+    )
+    price = models.DecimalField(
+        _('Room price'),
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        null=True, blank=True
+    )
+    discounted_price = models.DecimalField(
+        _('Discounted Price'),
+        max_digits=10,
+        decimal_places=2,
+        null=True, blank=True
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,

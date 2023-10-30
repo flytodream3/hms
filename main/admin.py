@@ -26,6 +26,6 @@ class HotelImageAdmin(admin.ModelAdmin):
 
 @admin.register(Room)
 class RoomAdmin(ImportExportModelAdmin):
-    list_display = ('name', 'hotel', 'author', 'created_at', 'updated_at')
+    list_display = ('name', 'hotel', 'price', 'author', 'created_at', 'updated_at')
     list_filter = ('hotel', 'author')
     search_fields = ['name']
