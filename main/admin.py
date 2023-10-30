@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Hotel, HotelImage
+from .models import Hotel, HotelImage, Room
 
 
 class HotelImageInline(admin.StackedInline):
@@ -22,3 +22,10 @@ class HotelAdmin(ImportExportModelAdmin):
 class HotelImageAdmin(admin.ModelAdmin):
     list_display = ('uid', 'hotel', 'uploaded')
     list_filter = ['hotel']
+
+
+@admin.register(Room)
+class RoomAdmin(ImportExportModelAdmin):
+    list_display = ('name', 'hotel', 'author', 'created_at', 'updated_at')
+    list_filter = ('hotel', 'author')
+    search_fields = ['name']

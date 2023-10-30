@@ -109,3 +109,41 @@ class HotelImage(models.Model):
     class Meta:
         verbose_name = _('Image')
         verbose_name_plural = _('Images')
+
+
+class Room(models.Model):
+    name = models.CharField(
+        _('Name'),
+        max_length=70,
+        help_text=_('Room number or name')
+    )
+    images = models.ManyToManyField(
+        HotelImage,
+        verbose_name=_('Room images')
+    )
+    hotel = models.ForeignKey(
+        Hotel,
+        verbose_name=_('Hotel'),
+        on_delete=models.CASCADE
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_('Author'),
+        on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    created_at = models.DateTimeField(
+        _('Created at'),
+        auto_now_add=True
+    )
+    updated_at = models.DateTimeField(
+        _('Updated at'),
+        auto_now=True
+    )
+
+    class Meta:
+        verbose_name = _('Room')
+        verbose_name_plural = _('Rooms')
+
+    def __str__(self):
+        return f'{self.name} ({self.hotel.name})'
