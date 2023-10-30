@@ -1,11 +1,16 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Hotel, HotelImage, Room
+from .models import Hotel, HotelImage, Room, Reservation
 
 
 class HotelImageInline(admin.StackedInline):
     model = HotelImage
+    extra = 1
+
+
+class ReservationInline(admin.TabularInline):
+    model = Reservation
     extra = 1
 
 
@@ -29,3 +34,11 @@ class RoomAdmin(ImportExportModelAdmin):
     list_display = ('name', 'hotel', 'price', 'author', 'created_at', 'updated_at')
     list_filter = ('hotel', 'author')
     search_fields = ['name']
+    inlines = [ReservationInline]
+
+
+@admin.register(Reservation)
+class ReservationAdmin(ImportExportModelAdmin):
+    list_display = ('room', 'start_date', 'end_date', 'author')
+    list_filter = ('room', 'author')
+    search_fields = ['room__name']

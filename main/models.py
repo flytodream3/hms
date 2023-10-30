@@ -120,7 +120,7 @@ class Room(models.Model):
     images = models.ManyToManyField(
         HotelImage,
         verbose_name=_('Room images'),
-        null=True, blank=True
+        blank=True
     )
     hotel = models.ForeignKey(
         Hotel,
@@ -146,6 +146,10 @@ class Room(models.Model):
         on_delete=models.SET_NULL,
         null=True, blank=True
     )
+    reserved = models.BooleanField(
+        _('Reserved'),
+        default=False
+    )
     created_at = models.DateTimeField(
         _('Created at'),
         auto_now_add=True
@@ -161,3 +165,41 @@ class Room(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.hotel.name})'
+
+
+class Reservation(models.Model):
+    uid = models.UUIDField(
+        primary_key=True,
+        auto_created=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    room = models.ForeignKey(
+        Room,
+        verbose_name=_('Room'),
+        on_delete=models.CASCADE
+    )
+    start_date = models.DateField(
+        _('Start date')
+    )
+    end_date = models.DateField(
+        _('End date'),
+        null=True, blank=True
+    )
+    created_at = models.DateTimeField(
+        _('Created at'),
+        auto_now_add=True
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_('Author'),
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        verbose_name = _('Reservation')
+        verbose_name_plural = _('Reservations')
+
+    def __str__(self):
+        return self.room.name
+
