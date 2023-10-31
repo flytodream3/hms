@@ -86,6 +86,11 @@ class HotelImage(models.Model):
         default=uuid.uuid4,
         editable=False
     )
+    title = models.CharField(
+        _('Image title'),
+        max_length=255,
+        null=True
+    )
     file = models.ImageField(
         _('Upload image'),
         upload_to='images/hotels'
@@ -109,6 +114,9 @@ class HotelImage(models.Model):
     class Meta:
         verbose_name = _('Image')
         verbose_name_plural = _('Images')
+
+    def __str__(self):
+        return self.title
 
 
 class Room(models.Model):
@@ -145,10 +153,6 @@ class Room(models.Model):
         verbose_name=_('Author'),
         on_delete=models.SET_NULL,
         null=True, blank=True
-    )
-    reserved = models.BooleanField(
-        _('Reserved'),
-        default=False
     )
     created_at = models.DateTimeField(
         _('Created at'),

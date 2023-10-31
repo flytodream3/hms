@@ -25,7 +25,7 @@ class HotelAdmin(ImportExportModelAdmin):
 
 @admin.register(HotelImage)
 class HotelImageAdmin(admin.ModelAdmin):
-    list_display = ('uid', 'hotel', 'uploaded')
+    list_display = ('uid', 'title', 'hotel', 'uploaded')
     list_filter = ['hotel']
 
 
