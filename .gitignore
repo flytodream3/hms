@@ -4,6 +4,7 @@ migrations
 db.sqlite3
 media
 /images
+backend/__init__.py
 main/__init__.py
 users/__init__.py
 api/__init__.py
