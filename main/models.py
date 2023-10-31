@@ -119,6 +119,13 @@ class HotelImage(models.Model):
         return self.title
 
 
+BED_TYPES = (
+    ('q', _('Queen')),
+    ('k', _('King')),
+    ('s', _('Single')),
+)
+
+
 class Room(models.Model):
     name = models.CharField(
         _('Name'),
@@ -129,6 +136,20 @@ class Room(models.Model):
         HotelImage,
         verbose_name=_('Room images'),
         blank=True
+    )
+    bed_count = models.PositiveSmallIntegerField(
+        _('Beds'),
+        null=True
+    )
+    bed_type = models.CharField(
+        _('Bed type'),
+        max_length=1,
+        choices=BED_TYPES,
+        null=True
+    )
+    sleeps = models.PositiveSmallIntegerField(
+        _('Sleeps'),
+        null=True
     )
     hotel = models.ForeignKey(
         Hotel,
