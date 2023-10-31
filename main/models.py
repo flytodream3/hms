@@ -1,5 +1,7 @@
 import uuid, datetime
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
@@ -127,6 +129,12 @@ BED_TYPES = (
 
 
 class Room(models.Model):
+    uid = models.UUIDField(
+        primary_key=True,
+        auto_created=True,
+        default=uuid.uuid4,
+        editable=False
+    )
     name = models.CharField(
         _('Name'),
         max_length=70,
@@ -193,22 +201,33 @@ class Room(models.Model):
 
 
 class Reservation(models.Model):
-    uid = models.UUIDField(
-        primary_key=True,
-        auto_created=True,
-        default=uuid.uuid4,
-        editable=False
-    )
     room = models.ForeignKey(
         Room,
         verbose_name=_('Room'),
         on_delete=models.CASCADE
+    )
+    number = models.CharField(
+        _('Reservation Number'),
+        max_length=10,
+        blank=True,
+        editable=False
     )
     start_date = models.DateField(
         _('Start date')
     )
     end_date = models.DateField(
         _('End date'),
+        null=True, blank=True
+    )
+    duration = models.PositiveIntegerField(
+        _('Reservation duration'),
+        editable=False,
+        null=True, blank=True
+    )
+    cost = models.DecimalField(
+        _('Reservation cost'),
+        max_digits=10,
+        decimal_places=2,
         null=True, blank=True
     )
     created_at = models.DateTimeField(
@@ -226,5 +245,20 @@ class Reservation(models.Model):
         verbose_name_plural = _('Reservations')
 
     def __str__(self):
-        return self.room.name
+        return self.number
 
+    def save(self, *args, **kwargs):
+        if self.end_date <= self.start_date:
+            raise ValueError('Start date must be before end date.')
+        else:
+            total_days = self.end_date - self.start_date
+            self.duration = total_days.days
+            self.cost = self.duration * self.room.price
+            super().save(*args, **kwargs)
+
+
+@receiver(post_save, sender=Reservation)
+def create_reservation_number(sender, instance, created, **kwargs):
+    if created and not instance.number:
+        instance.number = f'{instance.id:06d}'
+        instance.save()

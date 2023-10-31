@@ -39,6 +39,6 @@ class RoomAdmin(ImportExportModelAdmin):
 
 @admin.register(Reservation)
 class ReservationAdmin(ImportExportModelAdmin):
-    list_display = ('room', 'start_date', 'end_date', 'author')
+    list_display = ('number','room', 'duration', 'cost', 'start_date', 'end_date', 'author')
     list_filter = ('room', 'author')
     search_fields = ['room__name']
